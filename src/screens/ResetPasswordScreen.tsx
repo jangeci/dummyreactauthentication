@@ -1,14 +1,15 @@
 import {Button, Col, Container, Form, FormControl, FormGroup, Row} from "react-bootstrap";
-import {Link} from "react-router-dom";
-import {kRegisterRoute} from "./RegisterScreen.tsx";
 import {useState} from "react";
 import axios from "axios";
 
-export const kForgotPasswordRoute = '/forgot-password';
+export const kResetPasswordRoute = '/reset-password/:id';
 
-function ForgotPasswordScreen() {
+export default function ResetPasswordScreen() {
     const [form, setForm] = useState({
+        token: '',
         email: '',
+        password: '',
+        password_confirmation: '',
         message: '',
     });
 
@@ -19,15 +20,18 @@ function ForgotPasswordScreen() {
         }));
     };
 
-
     function formSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        axios.post('/forgot-password', {
-            email: form.email,
+        axios.post('/reset-password', {
+            ...form
         })
             .then(function (response) {
                 console.log(response);
+                // Logout();
+                // Login(response);
+                // setUser!(response.data.user);
+                // navigate(kProfileRoute);
                 setForm(prevState => ({
                     ...prevState,
                     message: response.data.message
@@ -50,7 +54,6 @@ function ForgotPasswordScreen() {
         </Col>
         : null;
 
-
     return (
         <div>
             <br/>
@@ -60,34 +63,53 @@ function ForgotPasswordScreen() {
             <Container>
                 <Row>
                     <div className="jumbotron col-lg-6 col-lg-offset-3">
-                        <h3 className="text-center">Forgot password</h3>
+                        <h3 className="text-center">Reset Password</h3>
                         {errorJSX}
-
-                        <Form id="resetForm" onSubmit={formSubmit}>
-                            <FormGroup controlId="formHorizontalEmail">
+                        <Form onSubmit={formSubmit}>
+                            <FormGroup>
                                 <Col sm={12}>
-                                    Email
+                                    Pincode
                                 </Col>
                                 <Col sm={12}>
-                                    <FormControl name="email" type="email" placeholder="Email" onChange={handleChange}/>
+                                    <FormControl name="token" type="text" placeholder="Pincode" onChange={handleChange}/>
+                                </Col>
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Col sm={12}>
+                                    New Password
+                                </Col>
+                                <Col sm={12}>
+                                    <FormControl name="password" type="password" placeholder="Password" onChange={handleChange}/>
+                                </Col>
+                            </FormGroup>
+                            <FormGroup>
+                                <Col sm={12}>
+                                    Password confirmation
+                                </Col>
+                                <Col sm={12}>
+                                    <FormControl type="password" name="password_confirmation" placeholder="Password confirmation" onChange={handleChange}/>
                                 </Col>
                             </FormGroup>
                             <div className="clearfix"/>
                             <div className="pt-4"/>
                             <FormGroup>
                                 <Col sm={12}>
-                                    <Button className="btn-block" type="submit">Submit</Button>
+                                    <Button className="btn-block" type="submit">Reset password</Button>
                                 </Col>
                             </FormGroup>
-                            <Col className="pt-4" sm={12}>
-                                Dont have account? <Link to={kRegisterRoute}>Register here</Link>
-                            </Col>
                         </Form>
                     </div>
                 </Row>
             </Container>
         </div>
     );
-}
 
-export default ForgotPasswordScreen;
+    // return (
+    //     <div className="justify-content-center align-content-center">
+    //         <Spinner animation="border" role="status">
+    //             <span className="visually-hidden">Loading...</span>
+    //         </Spinner>
+    //     </div>
+    // );
+}

@@ -1,15 +1,17 @@
 import {Button, Col, Container, Form, FormControl, FormGroup, Row} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {kLoginRoute} from "./LoginScreen.tsx";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import axios from "axios";
 import {Login, Logout} from "../services/UserService.tsx";
 import {kProfileRoute} from "./ProfileScreen.tsx";
+import {AppContext} from "../App.tsx";
 
 export const kRegisterRoute = '/register';
 
 function RegisterScreen() {
     const navigate = useNavigate();
+    const {setUser} = useContext(AppContext);
 
     const [form, setForm] = useState({
         name: '',
@@ -35,6 +37,7 @@ function RegisterScreen() {
                 console.log(response);
                 Logout();
                 Login(response);
+                setUser!(response.data.user);
                 navigate(kProfileRoute);
             })
             .catch(function (error) {

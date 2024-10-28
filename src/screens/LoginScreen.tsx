@@ -1,10 +1,11 @@
 import {Button, Col, Container, Form, FormControl, FormGroup, Row} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {kForgotPasswordRoute} from "./ForgotPasswordScreen.tsx";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import axios from "axios";
 import {kProfileRoute} from "./ProfileScreen.tsx";
 import {Login} from "../services/UserService.tsx";
+import {AppContext} from "../App.tsx";
 
 export const kLoginRoute = '/login';
 
@@ -12,9 +13,11 @@ function LoginScreen() {
     const [form, setForm] = useState({
         email: '',
         password: '',
+        message: '',
     });
 
     const navigate = useNavigate();
+    const {setUser} = useContext(AppContext);
 
     const handleChange = (e: { target: { name: string; value: unknown; }; }) => {
         setForm(prevState => ({
@@ -32,12 +35,25 @@ function LoginScreen() {
             .then(function (response) {
                 console.log(response);
                 Login(response);
+                setUser!(response.data.user);
                 navigate(kProfileRoute);
             })
             .catch(function (error) {
                 console.log(error);
+                setForm(prevState => ({
+                    ...prevState,
+                    message: error.response.data.message
+                }));
             });
     }
+
+    const errorJSX = form.message ?
+        <Col sm={12}>
+            <div className="alert alert-danger" role="alert">
+                {form.message}
+            </div>
+        </Col>
+        : null;
 
     return (
         <div>
@@ -49,6 +65,7 @@ function LoginScreen() {
                 <Row>
                     <div className="jumbotron col-lg-6 col-lg-offset-3">
                         <h3 className="text-center">Login</h3>
+                        {errorJSX}
                         <Form onSubmit={formSubmit}>
                             <FormGroup controlId="formHorizontalEmail">
                                 <Col sm={12}>

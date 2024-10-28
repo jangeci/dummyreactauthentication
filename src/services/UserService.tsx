@@ -6,6 +6,5 @@ export function Login(response: AxiosResponse) {
 }
 
 export function Logout() {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    localStorage.clear();
 }
