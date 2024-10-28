@@ -28,10 +28,6 @@ export default function ResetPasswordScreen() {
         })
             .then(function (response) {
                 console.log(response);
-                // Logout();
-                // Login(response);
-                // setUser!(response.data.user);
-                // navigate(kProfileRoute);
                 setForm(prevState => ({
                     ...prevState,
                     message: response.data.message

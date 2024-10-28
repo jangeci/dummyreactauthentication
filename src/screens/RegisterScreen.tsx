@@ -35,7 +35,6 @@ function RegisterScreen() {
         })
             .then(function (response) {
                 console.log(response);
-                Logout();
                 Login(response);
                 setUser!(response.data.user);
                 navigate(kProfileRoute);
